@@ -1,0 +1,13 @@
+/* Header Section */
+
+.logout:hover {
+    cursor: pointer;
+}
+
+/* login/create user */
+
+.inputControl {
+    width: 50%;
+}
+
+
