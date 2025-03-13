@@ -129,7 +129,7 @@ export default function EditTransactionForm(props) {
 }
 
 EditTransactionForm.propTypes = {
-  transaction: PropTypes.array,
+  transaction: PropTypes.object,
   category: PropTypes.string,
   userCatList: PropTypes.array,
   onViewEditOff: PropTypes.func,

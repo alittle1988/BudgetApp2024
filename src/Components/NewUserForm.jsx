@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import PropTypes from 'prop-types';
+import useFetch from "../Hooks/useFetch";
 
 function NewUserForm(props) {
   const {  onSetTheUser, onLoginSwitch } = props;
@@ -13,6 +14,7 @@ function NewUserForm(props) {
   const [validation, setValidation] = useState(false);
   const [validateUserName, setValidateUserName] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
+  const {post, results} = useFetch("http://localhost:8080");
 
   function formSubmit2(e) {
     e.preventDefault();
@@ -39,29 +41,9 @@ function NewUserForm(props) {
       setValidation(true);
       return;
     }
-    fetch("http://localhost:8080/users", {
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json"
-      }
-        ,
-      body: JSON.stringify(body)
-    }).then((response) => response.json()).then((data) => {
-      if(data.error === 'UserName already Exist') {
-        setValidateUserName(true);
-        setDisabled(true)
-      } else if(data.error === 'Email already in use!') {
-        setValidateEmail(true)
-        setDisabled(true)
-      } else {
-        onSetTheUser(data)
-        onLoginSwitch(true)
-      }
-      
-    }).catch(error => {
-      console.log(error)
-      
-    });
+    post("/users", body);
+    alert(`${body.userName} has been created!`);
+    onLoginSwitch()
   }
 
 function handleEmailChange(e) {

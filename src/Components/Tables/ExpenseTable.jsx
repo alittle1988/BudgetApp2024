@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Container } from "react-bootstrap";
-import { getTotalByCat } from "../../Functions/functions";
+import { getTotalByCat, getExpensesByCat } from "../../Functions/functions";
 import PropTypes from "prop-types";
 export default function ExpenseTable(props) {
-  const { theUser } = props;
-  const [negative, setNegative] = useState(false);
-
+  const { theUser, filteredExpenseTrans } = props;
+  
   function expenseTotals() {
     let expenseTotal = 0;
     let diffTotal = 0;
     let budgetTotal = 0;
 
-    theUser.expTransactions.forEach((trans) => {
+    filteredExpenseTrans.forEach((trans) => {
       expenseTotal += trans.amount;
     });
     theUser.expCategories.forEach((trans) => {
@@ -25,8 +24,10 @@ export default function ExpenseTable(props) {
   const [expenseTotal, budgetTotal, diffTotal] = expenseTotals();
 
   function setText(amount, cost) {
-    if(amount < cost) {
-      return 'text-danger'
+    if (amount < cost) {
+      return "text-danger";
+    } else if (amount > cost) {
+      return "text-success";
     }
   }
 
@@ -48,25 +49,32 @@ export default function ExpenseTable(props) {
               <tr key={cat.name}>
                 <td>{cat.name}</td>
                 <td>${cat.amount}</td>
-                <td>
-                  ${getTotalByCat(theUser.expTransactions, cat.name, "amount")}
-                </td>
-                <td className={setText(cat.amount, getTotalByCat(theUser.expTransactions, cat.name, "amount"))}>
+                <td>${getExpensesByCat(filteredExpenseTrans, cat.name)}</td>
+                <td
+                  className={setText(
+                    cat.amount,
+                    getTotalByCat(filteredExpenseTrans, cat.name, "amount")
+                  )}
+                >
                   $
-                  {cat.amount -
-                    getTotalByCat(theUser.expTransactions, cat.name, "amount")}
+                  {(
+                    cat.amount -
+                    getTotalByCat(filteredExpenseTrans, cat.name, "amount")
+                  ).toFixed(2)}
                 </td>
               </tr>
             );
           })}
           <tr className="table-primary">
             <td>Totals</td>
-            <td>${budgetTotal}</td>
-            <td>${expenseTotal}</td>
+            <td>${budgetTotal.toFixed(2)}</td>
+            <td>${expenseTotal.toFixed(2)}</td>
             {diffTotal < 0 ? (
-              <td className="text-danger">-${diffTotal}</td>
+              <td className="text-danger">
+                ${(-diffTotal).toFixed(2)}What the heck
+              </td>
             ) : (
-              <td>${diffTotal}</td>
+              <td className="text-success">${diffTotal.toFixed(2)}</td>
             )}
           </tr>
         </tbody>
@@ -77,4 +85,5 @@ export default function ExpenseTable(props) {
 
 ExpenseTable.propTypes = {
   theUser: PropTypes.object,
+  filteredExpenseTrans: PropTypes.array,
 };

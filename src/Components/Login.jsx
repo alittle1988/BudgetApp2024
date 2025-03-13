@@ -2,20 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import NewUserForm from "./NewUserForm";
 import PropTypes from "prop-types";
+import useFetch from "../Hooks/useFetch";
+
 
 function Login(props) {
   const [validation, setValidation] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [loginSwitch, setLoginSwitch] = useState(false);
-
+  const { get, results} = useFetch("http://localhost:8080");
   const { onHandleLogin, onSetTheUser } = props;
   const inputRef = useRef();
 
   function handleLoginSwitch() {
     setLoginSwitch(!loginSwitch);
   }
-
+  
   function handleSubmitClick(e) {
     e.preventDefault();
 
@@ -23,26 +25,25 @@ function Login(props) {
       setValidation(true);
       return;
     }
-    fetch(`http://localhost:8080/users/${userName}?password=${password}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error === "Incorrect Password Please try again!") {
-          alert(data.error);
-        } else if (data.error === "UserName does not exist!") {
-          alert(data.error);
-        } else {
-          onSetTheUser(data);
-          onHandleLogin();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    get(`/users/${userName}?password=${password}`);
+    
+
   }
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    if( results) {
+      if(results.error) {
+        alert(results.error + "  Please try again!")
+        setUserName("");
+        setPassword("");
+      } else {
+        onSetTheUser(results.data)
+        onHandleLogin()
+       
+      }
+    }
+    
+  }, [results, onHandleLogin, onSetTheUser]);
 
   return (
     <>
@@ -67,6 +68,7 @@ function Login(props) {
                     id="login-userName"
                     placeholder="Enter Username"
                     type="text"
+                    value={userName}
                     onChange={(e) =>
                       setUserName(e.currentTarget.value.toLowerCase())
                     }
@@ -78,6 +80,7 @@ function Login(props) {
                     id="login-password"
                     className="w-50"
                     type="password"
+                    value={password}
                     placeholder="Enter password"
                     onChange={(e) => setPassword(e.target.value)}
                   ></Form.Control>

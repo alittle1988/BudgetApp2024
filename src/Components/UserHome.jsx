@@ -1,6 +1,8 @@
-import { Container, Nav, Row } from "react-bootstrap";
-import { Link, Route, Routes } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import {  Route, Routes } from "react-router-dom";
 import AddTransaction from "./AddTransaction";
+import EditUser from "./EditUser";
+import NavBar from "./NavBar";
 import PropTypes from "prop-types";
 import VeiwTransaction from "./VeiwTransaction";
 import UserMain from "./UserMain";
@@ -14,26 +16,34 @@ function UserHome(props) {
     theUser,
     onEditTransaction,
     onDeleteClick,
+    year,
+    onHandleYearChange,
+    month,
+    months,
+    onHandleMonthChange,
+    onHandleSetUser,
+    onHandleLogout,
   } = props;
 
   return (
     <Container>
-      <Row className="mb-5">
-        <Nav className="justify-content-around">
-          <Nav.Item>
-            <Link to="/">Home</Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Link to="/addTransaction">Add Transaction/Category</Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Link to="/viewTransaction">View Transactions</Link>
-          </Nav.Item>
-        </Nav>
-      </Row>
+      <NavBar />
+      
 
       <Routes>
-        <Route path="/" element={<UserMain theUser={theUser} />} />
+        <Route
+          path="/"
+          element={
+            <UserMain
+              theUser={theUser}
+              year={year}
+              month={month}
+              months={months}
+              onHandleMonthChange={onHandleMonthChange}
+              onHandleYearChange={onHandleYearChange}
+            />
+          }
+        />
         <Route
           path="/addTransaction"
           element={
@@ -52,9 +62,19 @@ function UserHome(props) {
               onEditTransaction={onEditTransaction}
               onDeleteClick={onDeleteClick}
               theUser={theUser}
+              year={year}
+              onHandleYearChange={onHandleYearChange}
+              month={month}
+              months={months}
+              onHandleMonthChange={onHandleMonthChange}
             ></VeiwTransaction>
           }
         />
+        <Route path="/EditUser" element={
+          <EditUser
+          theUser={theUser}
+          onHandleSetUser={onHandleSetUser}
+          onHandleLogout={onHandleLogout} />}></Route>
       </Routes>
     </Container>
   );
@@ -70,4 +90,11 @@ UserHome.propTypes = {
   theUser: PropTypes.object,
   onEditTransaction: PropTypes.func,
   onDeleteClick: PropTypes.func,
+  year: PropTypes.string,
+  onHandleYearChange: PropTypes.func,
+  month: PropTypes.string,
+  months: PropTypes.array,
+  onHandleMonthChange: PropTypes.func,
+  onHandleSetUser: PropTypes.func,
+  onHandleLogout: PropTypes.func,
 };

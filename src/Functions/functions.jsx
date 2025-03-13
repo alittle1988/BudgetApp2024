@@ -12,5 +12,16 @@
       }
     });
 
-    return sum;
+    return sum.toFixed(2);
   };
+
+
+  export const getExpensesByCat = (array, category) => {
+    let sum = 0;
+    array.forEach( item => {
+      if( item.category === category) {
+        sum = sum + item.amount
+      }
+    });
+    return sum.toFixed(2)
+  }

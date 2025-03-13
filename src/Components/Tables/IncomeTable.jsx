@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { getTotalByCat } from "../../Functions/functions";
 import PropTypes from 'prop-types';
 function IncomeTable(props) {
-  const { theUser } = props;
-  const [amountTot, setAmountTot] = useState();
-  const [hoursTot, setHoursTot] = useState(0);
-  const [ptoTot, setPtoTot] = useState(0);
+  const { theUser, filteredIncomeTrans } = props;
+  
 
   function incomeTotals() {
     let incomeTotal = 0;
     let hoursTotal = 0;
     let ptoTotal = 0;
-
-    theUser.incTransactions.forEach((trans) => {
+    //theUser.incTransactions
+    filteredIncomeTrans.forEach((trans) => {
       incomeTotal += trans.amount;
       hoursTotal += trans.hours;
       ptoTotal += trans.ptoHours;
@@ -44,19 +41,20 @@ function IncomeTable(props) {
                 <tr key={index}>
                   <td>{cat.name}</td>
                   <td>
-                    ${getTotalByCat(theUser.incTransactions, cat.name, "amount")}
+                    ${Math.round(getTotalByCat(filteredIncomeTrans, cat.name, "amount") * 100) / 100}
                   </td>
                   <td>
-                    {getTotalByCat(theUser.incTransactions, cat.name, "hours")}
+                    {Math.round(getTotalByCat(filteredIncomeTrans, cat.name, "hours") * 100) / 100 || 0}
                   </td>
-                  <td>{getTotalByCat(theUser.incTransactions, cat.name, "pto")}</td>
+                  <td>{Math.round(getTotalByCat(filteredIncomeTrans, cat.name, "pto") * 100) / 100 || 0}</td>
                 </tr>
               );
             })}
             <tr className="table-primary">
               <td>Totals</td>
-              <td>${income}</td>
-              <td>{hours}</td>
+              <td >${income *100 / 100}</td>
+              <td>{hours  *100 / 100 || 0}</td>
+              <td>{pto  *100 / 100 || 0}</td>
             </tr>
           </tbody>
         </table>
@@ -69,4 +67,5 @@ export default IncomeTable;
 
 IncomeTable.propTypes = {
   theUser: PropTypes.object,
+  filteredIncomeTrans: PropTypes.array
 }

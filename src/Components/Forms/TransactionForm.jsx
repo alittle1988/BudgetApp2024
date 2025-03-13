@@ -6,14 +6,14 @@ function TransactionForm(props) {
   const { categories, incExp, onAddTransaction } = props;
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState();
   const [date, setDate] = useState("");
   const [catVal, setCatVal] = useState(false);
   const [amountVal, setAmountVal] = useState(false);
   const [dateVal, setDateVal] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [hours, setHours] = useState(0);
-  const [ptoHours, setPtoHours] = useState(0);
+  const [hours, setHours] = useState();
+  const [ptoHours, setPtoHours] = useState();
 
   function handleSubmitClick(e) {
     e.preventDefault();
@@ -48,8 +48,8 @@ function TransactionForm(props) {
     setAmount(0);
     setDate("");
     setCategory("");
-    setHours(0);
-    setPtoHours(0);
+    setHours();
+    setPtoHours();
   }
   function handleAmountChange(e) {
     setAmount(e);
@@ -92,7 +92,7 @@ function TransactionForm(props) {
         ) : (
           <Form.Select
             id="selectCategory"
-            value={category.name}
+            value={category}
             name="selectCategory"
             className="w-50"
             onChange={(e) => handleCatChange(e.target.value)}
@@ -146,6 +146,7 @@ function TransactionForm(props) {
           <Form.Group>
             <Form.Label htmlFor="hours">Hours Worked:</Form.Label>
             <Form.Control
+              step="0.01"
               type="number"
               id="hours"
               className="w-50"
@@ -167,6 +168,7 @@ function TransactionForm(props) {
           onChange={(e) => handleAmountChange(e.target.value)}
           placeholder="Amount"
           min={0}
+          step="0.01"
         ></Form.Control>
         {amountVal ? (
           <p className="text-danger ">Please enter amount!</p>

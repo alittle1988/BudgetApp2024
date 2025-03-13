@@ -15,6 +15,13 @@ function Home(props) {
     theUser,
     onEditTransaction,
     onDeleteClick,
+    year,
+    onHandleYearChange,
+    month,
+    months,
+    onHandleMonthChange,
+    onHandleSetUser,
+    onHandleLogout
   } = props;
 
   return (
@@ -28,6 +35,14 @@ function Home(props) {
           theUser={theUser}
           onEditTransaction={onEditTransaction}
           onDeleteClick={onDeleteClick}
+          year={year}
+          onHandleYearChange={onHandleYearChange}
+          month={month}
+          months={months}
+          onHandleMonthChange={onHandleMonthChange}
+          onHandleSetUser={onHandleSetUser}
+          onHandleLogout={onHandleLogout}
+
         />
       ) : (
         <Login onHandleLogin={onHandleLogin} onSetTheUser={onSetTheUser} />
@@ -49,4 +64,11 @@ Home.propTypes = {
   theUser: PropTypes.object,
   onEditTransaction: PropTypes.func,
   onDeleteClick: PropTypes.func,
+  year: PropTypes.string,
+  onHandleYearChange: PropTypes.func,
+  month: PropTypes.string,
+  months: PropTypes.array,
+  onHandleMonthChange: PropTypes.func,
+  onHandleSetUser: PropTypes.func,
+  onHandleLogout: PropTypes.func,
 };

@@ -4,45 +4,32 @@ import PropTypes from "prop-types";
 import TransactionTable from "./Tables/TransactionTable";
 
 function VeiwTransaction(props) {
-  const { theUser, onEditTransaction, onDeleteClick } = props;
+  const {
+    theUser,
+    onEditTransaction,
+    onDeleteClick,
+    year,
+    onHandleYearChange,
+    month,
+    months,
+    onHandleMonthChange,
+  } = props;
   const [category, setCategory] = useState("Expense");
   const [catList, setCatList] = useState(["All", "Expense", "Income"]);
 
   const [viewEdit, setViewEdit] = useState(false);
-  const [months, setMonths] = useState([
-    "Januaray",
-    "Feburary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ]);
-  const [years, setYears] = useState([
-    "2020",
-    "2021",
-    "2022",
-    "2023",
-    "2024",
-    "2025",
-    "2026",
-    "2027",
-    "2028",
-    "2029",
-    "2030",
-  ]);
-  const [month, setMonth] = useState(months[new Date().getMonth()]);
-  const [year, setYear] = useState(new Date().getFullYear());
+
   const [transactionList, setTransactionsList] = useState(filterTrans(month));
   const [theUserTransCatList, setTheUserTransCatList] = useState(
     theUser.expCategories
   );
   const [deleteClick, setDeleteClick] = useState(true);
+
+  const newYears = [];
+
+  for (let i = 2020; i <= new Date().getFullYear(); i++) {
+    newYears.push(i);
+  }
 
   function filterTrans(from) {
     let begin;
@@ -129,14 +116,6 @@ function VeiwTransaction(props) {
     }
   }
 
-  function handleYearChange(e) {
-    setYear(e);
-  }
-
-  function handleMonthChange(e) {
-    setMonth(e);
-  }
-
   function handleViewEditOff() {
     setViewEdit(false);
   }
@@ -171,9 +150,41 @@ function VeiwTransaction(props) {
     <Container>
       <Row>
         <Col>
-          <h3 className="text-secondary">All Transactions</h3>
+          <h3 className="text-secondary text-center mb-5">All Transactions</h3>
         </Col>
-        <Col>
+      </Row>
+      <Row >
+        <Col lg={4}>
+          <Form>
+            <Form.Group>
+              <Form.Select
+                onChange={(e) => onHandleYearChange(e.target.value)}
+                value={year}
+                className="w-50"
+              >
+                {newYears.map((yearNum) => {
+                  return <option key={yearNum}>{yearNum}</option>;
+                })}
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Col>
+        <Col lg={4}>
+          <Form>
+            <Form.Group>
+              <Form.Select
+                onChange={(e) => onHandleMonthChange(e.target.value)}
+                value={month}
+                className="w-50"
+              >
+                {months.map((month) => {
+                  return <option key={month}>{month}</option>;
+                })}
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Col>
+        <Col col={4}>
           <Form>
             <Form.Select
               className="w-50"
@@ -184,38 +195,6 @@ function VeiwTransaction(props) {
                 return <option key={cat}>{cat}</option>;
               })}
             </Form.Select>
-          </Form>
-        </Col>
-      </Row>
-      <Row className="mt-5">
-        <Col lg={6}>
-          <Form>
-            <Form.Group>
-              <Form.Select
-                onChange={(e) => handleYearChange(e.target.value)}
-                value={year}
-                className="w-50"
-              >
-                {years.map((year) => {
-                  return <option key={year}>{year}</option>;
-                })}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </Col>
-        <Col lg={6}>
-          <Form>
-            <Form.Group>
-              <Form.Select
-                onChange={(e) => handleMonthChange(e.target.value)}
-                value={month}
-                className="w-50"
-              >
-                {months.map((month) => {
-                  return <option key={month}>{month}</option>;
-                })}
-              </Form.Select>
-            </Form.Group>
           </Form>
         </Col>
       </Row>
@@ -244,4 +223,9 @@ VeiwTransaction.propTypes = {
   theUser: PropTypes.object,
   onEditTransaction: PropTypes.func,
   onDeleteClick: PropTypes.func,
+  year: PropTypes.string,
+  onHandleYearChange: PropTypes.func,
+  month: PropTypes.string,
+  months: PropTypes.array,
+  onHandleMonthChange: PropTypes.func,
 };

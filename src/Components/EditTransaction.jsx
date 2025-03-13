@@ -32,9 +32,9 @@ function EditTransaction(props) {
 export default EditTransaction;
 
 EditTransaction.propTypes = {
-  transaction: PropTypes.array,
+  transaction: PropTypes.object,
   theUser: PropTypes.object,
   category: PropTypes.string,
-  onViewEditOff: PropTypes.object,
+  onViewEditOff: PropTypes.func,
   onEditTransaction: PropTypes.func
 }

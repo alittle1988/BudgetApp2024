@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import EditUser from "./Components/EditUser.jsx";
 import Header from "./Components/Header.jsx";
 import Home from "./Components/Home.jsx";
 import Search from "./Components/Search.jsx";
-
+import useFetch from "./Hooks/useFetch.js";
 import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 
@@ -14,12 +13,42 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [incomeCategories, setIncomeCategories] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
-  console.log(theUser);
-
+  const [year, setYear] = useState(new Date().getFullYear().toString())
+  const [months, setMonths] = useState([
+      "Januaray",
+      "Feburary",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ]);
+  const [month, setMonth] = useState(months[new Date().getMonth()])
+  const { put } = useFetch("http://localhost:8080");
   // handle Logout click
   function handleLogout() {
     setLoggedIn(false);
     setTheUser({});
+  }
+
+  //handle Year Change
+  function handleYearChange(e) {
+    setYear(e)
+  }
+
+  //handle month Change
+  function handleMonthChange(e) {
+    setMonth(e)
+  }
+
+  function handleUpdateUser(data) {
+    setTheUser(data)
+    put(`/users/${data._id}`, data)
   }
 
   // handle login click
@@ -29,6 +58,7 @@ function App() {
 
   // handles setting user
   function handleSetTheUser(user) {
+
     setTheUser(user);
     setExpenseCategories(user.expCategories);
     setIncomeCategories(user.incCategories);
@@ -47,13 +77,7 @@ function App() {
       let newData = { ...theUser, expCategories };
       setTheUser(newData);
     }
-    fetch(`http://localhost:8080/users/${theUser.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(theUser),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    put(`/users/${theUser._id}`, theUser);
   }
 
   // handles finding index of item by Id
@@ -70,13 +94,16 @@ function App() {
       incTransactions.splice(index, 1);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
+      put(`/users/${theUser._id}`, newData)
     } else {
       const { expTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, expTransactions);
       expTransactions.splice(index, 1);
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
+      put(`/users/${theUser._id}`, newData)
     }
+    
   }
   // handles editing transaction that already exist on server
   function handleEditTransaction(data, incExp) {
@@ -107,28 +134,8 @@ function App() {
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
     }
-    fetch(`http://localhost:8080/users/${theUser.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(theUser),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    put(`/users/${theUser._id}`, theUser);
   }
-
-  useEffect(() => {
-    if (theUser === undefined) {
-      return;
-    } else {
-      fetch(`http://localhost:8080/users/${theUser.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(theUser),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    }
-  }, [theUser]);
 
   return (
     <>
@@ -149,11 +156,17 @@ function App() {
                 onAddCategory={handleAddCategory}
                 onEditTransaction={handleEditTransaction}
                 onDeleteClick={handleDeleteClick}
+                year={year}
+                onHandleYearChange={handleYearChange}
+                month={month}
+                onHandleMonthChange={handleMonthChange}
+                months={months}
+                onHandleSetUser={handleUpdateUser}
+                onHandleLogout={handleLogout}
               />
             }
           ></Route>
           <Route path="/Search" element={<Search />}></Route>
-          <Route path="/EditUser" element={<EditUser />}></Route>
         </Routes>
       </Container>
     </>

@@ -40,7 +40,8 @@ function TransactionTable(props) {
   }
 
   //handles Click to edit Transaction
-  function handleTransClick(e, index) {
+  function handleTransClick(e) {
+    console.log(e)
     setEditTrans(e);
     onViewEditOn();
   }
@@ -55,7 +56,7 @@ function TransactionTable(props) {
     
   }
   useEffect(() => {
-    setTransToDisplay(transactions);
+    setTransToDisplay(transactions.reverse());
     //handleCatSelect(cat)
     setCat('All')
     
@@ -89,7 +90,7 @@ function TransactionTable(props) {
           />
         ) : (
           <Row>
-            <table className="table table-hover">
+            <table className="table table-hover table2">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -102,36 +103,37 @@ function TransactionTable(props) {
               <tbody>
                 {transToDisplay.map((trans, index) => {
                   return (
-                    <>
-                      <tr className="table-secondary" key={index}>
-                        <th onClick={(e) => handleTransClick(trans, index)}>
+                    
+                     <tr className="tr" key={index}>
+                        <th onClick={() => handleTransClick(trans, index)}>
                           {trans.date}
                         </th>
-                        <td onClick={(e) => handleTransClick(trans, index)}>
+                        <td onClick={() => handleTransClick(trans, index)}>
                           {trans.category}
                         </td>
-                        <td onClick={(e) => handleTransClick(trans, index)}>
-                          ${trans.amount}
+                        <td onClick={() => handleTransClick(trans, index)}>
+                          ${trans.amount.toFixed(2)}
                         </td>
                         {category === "Income" && trans.description === "" ? (
-                          <td onClick={(e) => handleTransClick(trans, index)}>
+                          <td onClick={() => handleTransClick(trans, index)}>
                             {trans.hours} hours worked
                           </td>
                         ) : (
-                          <td onClick={(e) => handleTransClick(trans, index)}>
+                          <td onClick={() => handleTransClick(trans, index)}>
                             {trans.description}
                           </td>
                         )}
-                        <td key={`button${index}`}>
-                        <Button
+                        <td className="p-1" style={{width: '.1%'}} key={`button${index}`}>
+                          <p className="text-center m-1">X</p>
+                         {/*<Button
                           className="btn-danger"
-                          onClick={(e) => handleDeleteBtnClick(trans)}
+                          onClick={() => handleDeleteBtnClick(trans)}
                         >
                           Delete
-                        </Button>
+                        </Button>*/}
                         </td>
                       </tr>
-                    </>
+                    
                   );
                 })}
               </tbody>

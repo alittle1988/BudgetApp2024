@@ -11,3 +11,17 @@
 }
 
 
+/* Transaction Table */
+
+.tr {
+    border-radius: 25%;
+    border: 2px solid blue;
+    border-top: 2px solid blue;
+
+}
+
+.table2 {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
