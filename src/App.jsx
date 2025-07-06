@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Components/Header.jsx";
 import Home from "./Components/Home.jsx";
 import Search from "./Components/Search.jsx";
-import useFetch from "./Hooks/useFetch.js";
+
 import { Container } from "react-bootstrap";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -31,14 +31,14 @@ function App() {
     "December",
   ]);
   const [month, setMonth] = useState(months[new Date().getMonth()]);
-  const { put } = useFetch("http://localhost:5001");
+
   const navigate = useNavigate();
 
   // handle Logout click
   function handleLogout() {
     setLoggedIn(false);
     setTheUser({});
-    toast.success('User has been logged out!')
+    toast.success("User has been logged out!");
   }
 
   //handle Year Change
@@ -53,14 +53,13 @@ function App() {
 
   function handleUpdateUser(data) {
     setTheUser(data);
-    put(`/users/${data._id}`, data);
   }
 
   // handle login click
   function handleLogin() {
     setLoggedIn(true);
     navigate("/");
-    toast.success("User login successfull!")
+    toast.success("User login successfull!");
   }
 
   // handles setting user
@@ -83,7 +82,8 @@ function App() {
       let newData = { ...theUser, expCategories };
       setTheUser(newData);
     }
-    put(`/users/${theUser._id}`, theUser);
+    //put(`/users/${theUser._id}`, theUser);
+    api.put(`/users/${theUser._id}`, theUser);
   }
 
   // handles finding index of item by Id
@@ -100,14 +100,16 @@ function App() {
       incTransactions.splice(index, 1);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData);
+      api.put(`/users/${theUser._id}`, newData);
+      //put(`/users/${theUser._id}`, newData);
     } else {
       const { expTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, expTransactions);
       expTransactions.splice(index, 1);
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData);
+      api.put(`/users/${theUser._id}`, newData);
+      //put(`/users/${theUser._id}`, newData);
     }
   }
   // handles editing transaction that already exist on server
@@ -118,14 +120,16 @@ function App() {
       incTransactions.splice(index, 1, data);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData);
+      api.put(`/users/${theUser._id}`, newData);
+      //put(`/users/${theUser._id}`, newData);
     } else {
       const { expTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, expTransactions);
       expTransactions.splice(index, 1, data);
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData);
+      //put(`/users/${theUser._id}`, newData);
+      api.put(`/users/${theUser._id}`, newData);
     }
   }
   // handles adding transaction the the user transaction list
@@ -141,7 +145,8 @@ function App() {
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
     }
-    put(`/users/${theUser._id}`, theUser);
+    //put(`/users/${theUser._id}`, theUser);
+    api.put(`/users/${theUser._id}`, theUser);
   }
 
   return (

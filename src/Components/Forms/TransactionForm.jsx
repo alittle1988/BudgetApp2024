@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import PropTypes from 'prop-types';
+import toast from "react-hot-toast";
 
 function TransactionForm(props) {
   const { categories, incExp, onAddTransaction } = props;
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(0);
   const [date, setDate] = useState("");
   const [catVal, setCatVal] = useState(false);
   const [amountVal, setAmountVal] = useState(false);
@@ -15,6 +16,8 @@ function TransactionForm(props) {
   const [hours, setHours] = useState();
   const [ptoHours, setPtoHours] = useState();
 
+
+  console.log(amount)
   function handleSubmitClick(e) {
     e.preventDefault();
     if (amount === 0) {
@@ -31,6 +34,13 @@ function TransactionForm(props) {
       setCatVal(true);
       setDisabled(true);
       return;
+    }
+
+    if(category === "Gas") {
+      if(typeof description !== 'number') {
+        toast.error('Enter gallons in description input!')
+        return
+      }
     }
 
     let newTrans = {
@@ -132,14 +142,21 @@ function TransactionForm(props) {
         )}
         <Form.Group>
           <Form.Label htmlFor="description">Description:</Form.Label>
-          <Form.Control
+          {category === 'gas' ? <Form.Control
+            type="number"
+            id="description"
+            className="w-50"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+          ></Form.Control> : <Form.Control
             type="text"
             id="description"
             className="w-50"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
-          ></Form.Control>
+          ></Form.Control> }
         </Form.Group>
 
         {category === "Tips" ? (
