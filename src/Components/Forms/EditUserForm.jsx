@@ -1,27 +1,27 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import useFetch from "../../Hooks/useFetch";
+import api from "../../../lib/axios";
+import toast from "react-hot-toast";
 
 export default function EditUserForm(props) {
   const { theUser, onHandleSetUser, onHandleLogout } = props;
   const [newUserName, setNewUserName] = useState(theUser.userName);
   const [newFirstName, setNewFirstName] = useState(theUser.firstName);
   const [newLastName, setNewLastName] = useState(theUser.lastName);
-  const [newEmail, setNewEmail] = useState(theUser.email)
-  const { remove, results, loading } = useFetch("http://localhost:5001");
+  const [newEmail, setNewEmail] = useState(theUser.email);
 
   function handleEditSubmit(e) {
     e.preventDefault();
 
     // figure out how to immutably change the strings
-    let {firstName, lastName, userName, email} = theUser;
+    let { firstName, lastName, userName, email } = theUser;
     firstName = newFirstName;
     lastName = newLastName;
     userName = newUserName;
-    email = newEmail
-    let updatedUser = {...theUser, firstName, lastName, userName, email}
-    
+    email = newEmail;
+    let updatedUser = { ...theUser, firstName, lastName, userName, email };
+
     onHandleSetUser(updatedUser);
     console.log("User has been updated!");
   }
@@ -33,9 +33,10 @@ export default function EditUserForm(props) {
       )
     ) {
       if (confirm("Are you sure?")) {
-        remove(`/users/${theUser._id}`);
-        alert("User has been deleted!");
+        api.delete(`/users/${theUser._id}`);
+
         onHandleLogout();
+        toast.success("User has been deleted!");
       }
     }
   }
@@ -77,13 +78,15 @@ export default function EditUserForm(props) {
           ></Form.Control>
         </Form.Group>
         <Form.Group>
-          <Form.Label className="font-weight-bold" htmlFor="email">Email:</Form.Label>
+          <Form.Label className="font-weight-bold" htmlFor="email">
+            Email:
+          </Form.Label>
           <Form.Control
             className="w-25"
             id="email"
             onChange={(e) => setNewEmail(e.target.value)}
             value={newEmail}
-            ></Form.Control>
+          ></Form.Control>
         </Form.Group>
         <Button type="submit" className="mt-4">
           Submit

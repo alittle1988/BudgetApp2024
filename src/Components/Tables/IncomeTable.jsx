@@ -5,11 +5,8 @@ import { incomeTotals } from "../../Functions/functions";
 function IncomeTable(props) {
   const { theUser, filteredIncomeTrans } = props;
 
-   
-  
   const [income, hours, pto] = incomeTotals(filteredIncomeTrans);
 
-  
   return (
     <Container>
       <Row>
@@ -42,7 +39,16 @@ function IncomeTable(props) {
                         100
                     ) / 100 || 0}
                   </td>
-                  {cat.name === "Tips" ? <td>{(getTotalByCat(filteredIncomeTrans, cat.name, "amount") / hours).toFixed(2)}</td> : <td></td>}
+                  {cat.name === "Tips" ? (
+                    <td>
+                      {(
+                        getTotalByCat(filteredIncomeTrans, cat.name, "amount") /
+                        hours
+                      ).toFixed(2)}
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                   <td>
                     {Math.round(
                       getTotalByCat(filteredIncomeTrans, cat.name, "pto") * 100

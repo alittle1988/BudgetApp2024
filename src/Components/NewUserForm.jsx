@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
-import useFetch from "../Hooks/useFetch";
+import api from "../../lib/axios";
+import toast from "react-hot-toast";
 
 function NewUserForm(props) {
-  const { onSetTheUser, onLoginSwitch } = props;
+  const {  onLoginSwitch } = props;
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,9 +15,9 @@ function NewUserForm(props) {
   const [validation, setValidation] = useState(false);
   const [validateUserName, setValidateUserName] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
-  const { post, results } = useFetch("http://localhost:5001");
+ 
 
-  function formSubmit2(e) {
+  async function formSubmit2(e) {
     e.preventDefault();
 
     const body = {
@@ -32,17 +33,27 @@ function NewUserForm(props) {
       expCategories: [],
     };
     if (
-      firstName === "" ||
-      lastName === "" ||
-      email === "" ||
-      password === "" ||
-      userName === ""
+      firstName.trim() === "" ||
+      lastName.trim() === "" ||
+      email.trim() === "" ||
+      password.trim() === "" ||
+      userName.trim() === ""
     ) {
+      toast.error("Please fill all required fields!");
       setValidation(true);
       return;
     }
-
-    post("/users", body);
+    try {
+      await api.post("/users", body);
+      toast.success(`${userName} created successfully!`);
+      onLoginSwitch();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+      setEmail("");
+      setPassword("");
+      setUserName("");
+    }
   }
 
   function handleEmailChange(e) {
@@ -56,23 +67,6 @@ function NewUserForm(props) {
     setUserName(e);
     setDisabled(false);
   }
-
-  useEffect(() => {
-    if (results) {
-      if (results.success === false) {
-        if (results.message === "Email already exist!") {
-          alert(results.message);
-          setEmail("");
-        } else if (results.message === "Username already exist!") {
-          alert(results.message);
-          setUserName("");
-        }
-      } else {
-        alert(`${userName} has been Created`);
-        onLoginSwitch();
-      }
-    }
-  }, [results]);
 
   return (
     <Container>

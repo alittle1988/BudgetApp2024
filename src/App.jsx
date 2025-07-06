@@ -7,6 +7,7 @@ import Search from "./Components/Search.jsx";
 import useFetch from "./Hooks/useFetch.js";
 import { Container } from "react-bootstrap";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [theUser, setTheUser] = useState();
@@ -36,6 +37,7 @@ function App() {
   function handleLogout() {
     setLoggedIn(false);
     setTheUser({});
+    toast.success('User has been logged out!')
   }
 
   //handle Year Change
@@ -57,6 +59,7 @@ function App() {
   function handleLogin() {
     setLoggedIn(true);
     navigate("/");
+    toast.success("User login successfull!")
   }
 
   // handles setting user
@@ -143,6 +146,7 @@ function App() {
   return (
     <>
       <Container fluid>
+        <Toaster />
         <Header onLogout={handleLogout} theUser={theUser} loggedIn={loggedIn} />
         <Routes>
           <Route

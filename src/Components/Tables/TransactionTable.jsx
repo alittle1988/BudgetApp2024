@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Row, Form } from "react-bootstrap";
 import EditTransaction from "../EditTransaction";
 import PropTypes from "prop-types";
+import {Trash2} from 'lucide-react'
 
 function TransactionTable(props) {
   const {
@@ -132,7 +133,7 @@ function TransactionTable(props) {
                             className="text-center m-1"
                             onClick={() => handleDeleteBtnClick(trans)}
                           >
-                            X
+                            <Trash2 />
                           </p>
                         </td>
                       </tr>

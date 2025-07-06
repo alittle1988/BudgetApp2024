@@ -1,49 +1,42 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import NewUserForm from "./NewUserForm";
 import PropTypes from "prop-types";
-import useFetch from "../Hooks/useFetch";
-
+import api from "../../lib/axios";
+import toast from "react-hot-toast";
 
 function Login(props) {
   const [validation, setValidation] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [loginSwitch, setLoginSwitch] = useState(false);
-  const { get, results} = useFetch("http://localhost:5001");
+  const [loading, setLoading] = useState(false)
   const { onHandleLogin, onSetTheUser } = props;
   const inputRef = useRef();
+  
 
   function handleLoginSwitch() {
     setLoginSwitch(!loginSwitch);
   }
-  
-  function handleSubmitClick(e) {
+
+  async function handleSubmitClick(e) {
     e.preventDefault();
 
     if (userName === "" || password === "") {
       setValidation(true);
       return;
     }
-    get(`/users/${userName}?password=${password}`);
-    
 
-  }
+    try {
+      const res = await api.get(`/users/${userName}?password=${password}`);
 
-  useEffect(() => {
-    if( results) {
-      if(results.error) {
-        alert(results.error + "  Please try again!")
-        setUserName("");
-        setPassword("");
-      } else {
-        onSetTheUser(results.data)
-        onHandleLogin()
-       
-      }
+      onSetTheUser(res.data.data);
+      onHandleLogin();
+    } catch (error) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error);
     }
-    
-  }, [results, onHandleLogin, onSetTheUser]);
+  }
 
   return (
     <>
