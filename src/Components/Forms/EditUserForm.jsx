@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import api from "../../../lib/axios";
 import toast from "react-hot-toast";
 
+
 export default function EditUserForm(props) {
   const { theUser, onHandleSetUser, onHandleLogout } = props;
   const [newUserName, setNewUserName] = useState(theUser.userName);
@@ -11,10 +12,13 @@ export default function EditUserForm(props) {
   const [newLastName, setNewLastName] = useState(theUser.lastName);
   const [newEmail, setNewEmail] = useState(theUser.email);
 
-  function handleEditSubmit(e) {
+  async function handleEditSubmit(e) {
     e.preventDefault();
-
-    // figure out how to immutably change the strings
+    if(newUserName.trim() === "" || newFirstName.trim() === "" || newLastName.trim() === "" || newEmail.trim() === "") {
+      toast.error("Please fill all required fields!")
+      return
+    }
+    
     let { firstName, lastName, userName, email } = theUser;
     firstName = newFirstName;
     lastName = newLastName;
@@ -22,8 +26,17 @@ export default function EditUserForm(props) {
     email = newEmail;
     let updatedUser = { ...theUser, firstName, lastName, userName, email };
 
-    onHandleSetUser(updatedUser);
-    console.log("User has been updated!");
+    try {
+      const res = await api.put(`users/${theUser._id}`, updatedUser);
+      
+      onHandleSetUser(updatedUser)
+      toast.success(`${theUser.userName} has been updated!`)
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+    
   }
 
   function handleDeleteUser(theUser) {

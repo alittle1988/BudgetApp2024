@@ -8,6 +8,7 @@ import useFetch from "./Hooks/useFetch.js";
 import { Container } from "react-bootstrap";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import api from "../lib/axios.js";
 
 function App() {
   const [theUser, setTheUser] = useState();
