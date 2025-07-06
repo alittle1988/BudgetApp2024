@@ -1,27 +1,32 @@
 /* Header Section */
 
 .logout:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* login/create user */
 
 .inputControl {
-    width: 50%;
+  width: 50%;
 }
-
 
 /* Transaction Table */
 
-.tr {
-    border-radius: 25%;
-    border: 2px solid blue;
-    border-top: 2px solid blue;
-
+.tr:hover {
+  transform: scale(1.05);
 }
 
-.table2 {
-    border-collapse: separate;
-    border-spacing: 0 10px;
+.date {
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
 }
 
+.delete {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.tTable {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}

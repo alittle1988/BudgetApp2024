@@ -6,30 +6,32 @@ import Home from "./Components/Home.jsx";
 import Search from "./Components/Search.jsx";
 import useFetch from "./Hooks/useFetch.js";
 import { Container } from "react-bootstrap";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 function App() {
   const [theUser, setTheUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [incomeCategories, setIncomeCategories] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
-  const [year, setYear] = useState(new Date().getFullYear().toString())
+  const [year, setYear] = useState(new Date().getFullYear().toString());
   const [months, setMonths] = useState([
-      "Januaray",
-      "Feburary",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ]);
-  const [month, setMonth] = useState(months[new Date().getMonth()])
-  const { put } = useFetch("http://localhost:8080");
+    "January",
+    "Feburary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ]);
+  const [month, setMonth] = useState(months[new Date().getMonth()]);
+  const { put } = useFetch("http://localhost:5001");
+  const navigate = useNavigate();
+
   // handle Logout click
   function handleLogout() {
     setLoggedIn(false);
@@ -38,27 +40,27 @@ function App() {
 
   //handle Year Change
   function handleYearChange(e) {
-    setYear(e)
+    setYear(e);
   }
 
   //handle month Change
   function handleMonthChange(e) {
-    setMonth(e)
+    setMonth(e);
   }
 
   function handleUpdateUser(data) {
-    setTheUser(data)
-    put(`/users/${data._id}`, data)
+    setTheUser(data);
+    put(`/users/${data._id}`, data);
   }
 
   // handle login click
   function handleLogin() {
     setLoggedIn(true);
+    navigate("/");
   }
 
   // handles setting user
   function handleSetTheUser(user) {
-
     setTheUser(user);
     setExpenseCategories(user.expCategories);
     setIncomeCategories(user.incCategories);
@@ -94,16 +96,15 @@ function App() {
       incTransactions.splice(index, 1);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData)
+      put(`/users/${theUser._id}`, newData);
     } else {
       const { expTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, expTransactions);
       expTransactions.splice(index, 1);
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
-      put(`/users/${theUser._id}`, newData)
+      put(`/users/${theUser._id}`, newData);
     }
-    
   }
   // handles editing transaction that already exist on server
   function handleEditTransaction(data, incExp) {
@@ -113,12 +114,14 @@ function App() {
       incTransactions.splice(index, 1, data);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
+      put(`/users/${theUser._id}`, newData);
     } else {
       const { expTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, expTransactions);
       expTransactions.splice(index, 1, data);
       let newData = { ...theUser, expTransactions };
       setTheUser(newData);
+      put(`/users/${theUser._id}`, newData);
     }
   }
   // handles adding transaction the the user transaction list

@@ -21,7 +21,7 @@ function Home(props) {
     months,
     onHandleMonthChange,
     onHandleSetUser,
-    onHandleLogout
+    onHandleLogout,
   } = props;
 
   return (
@@ -42,7 +42,6 @@ function Home(props) {
           onHandleMonthChange={onHandleMonthChange}
           onHandleSetUser={onHandleSetUser}
           onHandleLogout={onHandleLogout}
-
         />
       ) : (
         <Login onHandleLogin={onHandleLogin} onSetTheUser={onSetTheUser} />

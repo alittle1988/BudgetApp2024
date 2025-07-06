@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Form, Button } from "react-bootstrap";
+import { Container, Row, Form } from "react-bootstrap";
 import EditTransaction from "../EditTransaction";
-import PropTypes from 'prop-types';
-
+import PropTypes from "prop-types";
 
 function TransactionTable(props) {
   const {
@@ -16,50 +15,45 @@ function TransactionTable(props) {
     onEditTransaction,
     onDeleteClick,
     onRemoveTrans,
-    
+    onHandleViewFilterSwitch,
   } = props;
   const [transToDisplay, setTransToDisplay] = useState(transactions);
   const [cat, setCat] = useState("All");
   const [editTrans, setEditTrans] = useState({});
- 
+
+
 
   // handles setting the categories dropdown list
   function handleCatSelect(e) {
     setCat(e);
-    let newArray = [];
-    transactions.forEach((trans) => {
-      if (e === "All") {
-        newArray.push(trans);
-      } else if (e === trans.category) {
-        newArray.push(trans);
-      }
-    });
-    setTransToDisplay(newArray);
-    onViewEditOff(); 
     
+    if(e === "All") {
+      setTransToDisplay(transactions)
+    } else{
+    setTransToDisplay(transactions.filter(trans => trans.category === e))
+  }
+    onViewEditOff();
   }
 
   //handles Click to edit Transaction
   function handleTransClick(e) {
-    console.log(e)
     setEditTrans(e);
     onViewEditOn();
+    onHandleViewFilterSwitch()
   }
-
+  
   //handles deleting Transaction
 
   function handleDeleteBtnClick(e) {
     if (confirm("Are you sure you want to delete transaction?")) {
       onDeleteClick(e, category);
-      onRemoveTrans()
+      onRemoveTrans();
     }
-    
   }
   useEffect(() => {
     setTransToDisplay(transactions.reverse());
     //handleCatSelect(cat)
-    setCat('All')
-    
+    setCat("All");
   }, [transactions]);
 
   return (
@@ -87,16 +81,18 @@ function TransactionTable(props) {
             transaction={editTrans}
             category={category}
             theUser={theUser}
+            onHandleViewFilterSwitch={onHandleViewFilterSwitch}
           />
         ) : (
           <Row>
-            <table className="table table-hover table2">
+            <table className="table table-primary  tTable">
               <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Category</th>
-                  <th>Amount</th>
-                  <th>Description</th>
+                <tr className="table-light">
+                  <th className="text-center">Date</th>
+                  <th className="text-center">Category</th>
+                  <th className="text-center">Amount</th>
+                  <th className="text-center">{cat === "Tips" ? "Tips/Tips Per Hr" : "Description"}</th>
+                  
                   <th>Delete</th>
                 </tr>
               </thead>
@@ -104,33 +100,40 @@ function TransactionTable(props) {
                 {transToDisplay.map((trans, index) => {
                   return (
                     
-                     <tr className="tr" key={index}>
-                        <th onClick={() => handleTransClick(trans, index)}>
+                      <tr className="tr opacity-75" key={index}>
+                        <th
+                          className="date text-center"
+                          onClick={() => handleTransClick(trans, index)}
+                        >
                           {trans.date}
                         </th>
-                        <td onClick={() => handleTransClick(trans, index)}>
+                        <td className="text-center" onClick={() => handleTransClick(trans, index)}>
                           {trans.category}
                         </td>
-                        <td onClick={() => handleTransClick(trans, index)}>
+                        <td className="text-center" onClick={() => handleTransClick(trans, index)}>
                           ${trans.amount.toFixed(2)}
                         </td>
-                        {category === "Income" && trans.description === "" ? (
-                          <td onClick={() => handleTransClick(trans, index)}>
-                            {trans.hours} hours worked
+                        {category === "Income" && trans.description === "" ? (<>
+                          <td className="text-center" onClick={() => handleTransClick(trans, index)}>
+                            {trans.category === "Tips" ? `${trans.hours} / ${(trans.amount / trans.hours).toFixed(2)}` : "" }
                           </td>
-                        ) : (
-                          <td onClick={() => handleTransClick(trans, index)}>
+                          
+                        </>) : (
+                          <td className="text-center" onClick={() => handleTransClick(trans, index)}>
                             {trans.description}
                           </td>
                         )}
-                        <td className="p-1" style={{width: '.1%'}} key={`button${index}`}>
-                          <p className="text-center m-1">X</p>
-                         {/*<Button
-                          className="btn-danger"
-                          onClick={() => handleDeleteBtnClick(trans)}
+                        <td
+                          className="p-1 table-danger delete"
+                          style={{ width: ".1%" }}
+                          key={`button${index}`}
                         >
-                          Delete
-                        </Button>*/}
+                          <p
+                            className="text-center m-1"
+                            onClick={() => handleDeleteBtnClick(trans)}
+                          >
+                            X
+                          </p>
                         </td>
                       </tr>
                     
@@ -149,13 +152,14 @@ export default TransactionTable;
 
 TransactionTable.propTypes = {
   transactions: PropTypes.array,
-    category: PropTypes.string,
-    theUserCat: PropTypes.array,
-    theUser: PropTypes.object,
-    viewEdit: PropTypes.bool,
-    onViewEditOn: PropTypes.func,
-    onViewEditOff: PropTypes.func,
-    onEditTransaction: PropTypes.func,
-    onDeleteClick: PropTypes.func,
-    onRemoveTrans: PropTypes.func,
-}
+  category: PropTypes.string,
+  theUserCat: PropTypes.array,
+  theUser: PropTypes.object,
+  viewEdit: PropTypes.bool,
+  onViewEditOn: PropTypes.func,
+  onViewEditOff: PropTypes.func,
+  onEditTransaction: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  onRemoveTrans: PropTypes.func,
+  onHandleViewFilterSwitch: PropTypes.func,
+};

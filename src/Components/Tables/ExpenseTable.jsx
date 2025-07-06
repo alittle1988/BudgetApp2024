@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { getTotalByCat, getExpensesByCat } from "../../Functions/functions";
 import PropTypes from "prop-types";
+import { expenseTotals } from "../../Functions/functions";
 export default function ExpenseTable(props) {
   const { theUser, filteredExpenseTrans } = props;
   
-  function expenseTotals() {
+  /*function expenseTotals() {
     let expenseTotal = 0;
     let diffTotal = 0;
     let budgetTotal = 0;
@@ -19,9 +20,10 @@ export default function ExpenseTable(props) {
     diffTotal = budgetTotal - expenseTotal;
 
     return [expenseTotal, budgetTotal, diffTotal];
-  }
-  expenseTotals();
-  const [expenseTotal, budgetTotal, diffTotal] = expenseTotals();
+  }*/
+  
+  const [expenseTotal, budgetTotal, diffTotal] = expenseTotals(theUser, filteredExpenseTrans);
+ 
 
   function setText(amount, cost) {
     if (amount < cost) {
@@ -30,11 +32,12 @@ export default function ExpenseTable(props) {
       return "text-success";
     }
   }
+  
 
   return (
     <Container>
-      <h3 className="mb-5">Summary of Expenses</h3>
-      <table className="table table-sm">
+      <h3 className="mb-5">Monthly Expenses by Category</h3>
+      <table className="table table-sm table-striped">
         <thead className="table-secondary">
           <tr>
             <th>Category</th>

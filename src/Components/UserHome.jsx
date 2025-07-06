@@ -1,11 +1,12 @@
 import { Container } from "react-bootstrap";
-import {  Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AddTransaction from "./AddTransaction";
 import EditUser from "./EditUser";
 import NavBar from "./NavBar";
 import PropTypes from "prop-types";
 import VeiwTransaction from "./VeiwTransaction";
 import UserMain from "./UserMain";
+import YearSummary from "./YearSummary";
 
 function UserHome(props) {
   const {
@@ -28,7 +29,6 @@ function UserHome(props) {
   return (
     <Container>
       <NavBar />
-      
 
       <Routes>
         <Route
@@ -70,11 +70,22 @@ function UserHome(props) {
             ></VeiwTransaction>
           }
         />
-        <Route path="/EditUser" element={
-          <EditUser
-          theUser={theUser}
-          onHandleSetUser={onHandleSetUser}
-          onHandleLogout={onHandleLogout} />}></Route>
+        <Route
+          path="/YearSummary"
+          element={
+            <YearSummary theUser={theUser} months={months} year={year} />
+          }
+        ></Route>
+        <Route
+          path="/EditUser"
+          element={
+            <EditUser
+              theUser={theUser}
+              onHandleSetUser={onHandleSetUser}
+              onHandleLogout={onHandleLogout}
+            />
+          }
+        ></Route>
       </Routes>
     </Container>
   );

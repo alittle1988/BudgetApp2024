@@ -4,7 +4,7 @@ import EditTransactionForm from "./Forms/EditTransactionForm";
 import PropTypes from 'prop-types';
 
 function EditTransaction(props) {
-  const { transaction, theUser, category, onViewEditOff, onEditTransaction} =
+  const { transaction, theUser, category, onViewEditOff, onEditTransaction, onHandleViewFilterSwitch} =
     props;
   return (
     <Container>
@@ -15,6 +15,7 @@ function EditTransaction(props) {
           category={category}
           onViewEditOff={onViewEditOff}
           onEditTransaction={onEditTransaction}
+          onHandleViewFilterSwitch={onHandleViewFilterSwitch}
         />
       ) : (
         <EditTransactionForm
@@ -23,6 +24,7 @@ function EditTransaction(props) {
           category={category}
           onViewEditOff={onViewEditOff}
           onEditTransaction={onEditTransaction}
+          onHandleViewFilterSwitch={onHandleViewFilterSwitch}
         />
       )}
     </Container>
@@ -36,5 +38,6 @@ EditTransaction.propTypes = {
   theUser: PropTypes.object,
   category: PropTypes.string,
   onViewEditOff: PropTypes.func,
-  onEditTransaction: PropTypes.func
+  onEditTransaction: PropTypes.func,
+  onHandleViewFilterSwitch: PropTypes.func,
 }

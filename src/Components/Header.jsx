@@ -8,10 +8,11 @@ function Header(props) {
     <>
       <Container fluid>
         <Row>
-          {/*<Button onClick={test}>Press me</Button>*/}
-          <Col className="my-5" lg={11}>
+          <Col className="my-4" lg={11}>
             {loggedIn ? (
-              <h1 className="text-center">Welcome {theUser.firstName}</h1>
+              <h1 className="text-center">
+                Welcome to the Budget App {theUser.firstName}
+              </h1>
             ) : (
               <h1 className="text-center">Budget App</h1>
             )}

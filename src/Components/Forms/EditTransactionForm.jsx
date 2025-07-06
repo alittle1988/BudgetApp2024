@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Form, FormLabel, Row } from "react-bootstrap";
+import { Button, Container, Form, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 export default function EditTransactionForm(props) {
@@ -9,6 +9,7 @@ export default function EditTransactionForm(props) {
     userCatList,
     onViewEditOff,
     onEditTransaction,
+    onHandleViewFilterSwitch,
   } = props;
   const [newCat, setNewCat] = useState(transaction.category);
   const [newAmount, setNewAmount] = useState(transaction.amount);
@@ -19,6 +20,7 @@ export default function EditTransactionForm(props) {
 
   function handleBackToTableClick() {
     onViewEditOff();
+    onHandleViewFilterSwitch()
   }
 
   function handleSubmit(e) {
@@ -31,6 +33,7 @@ export default function EditTransactionForm(props) {
     transaction.category = newCat;
     onEditTransaction(transaction, category);
     onViewEditOff();
+    onHandleViewFilterSwitch()
   }
 
   return (
@@ -134,4 +137,5 @@ EditTransactionForm.propTypes = {
   userCatList: PropTypes.array,
   onViewEditOff: PropTypes.func,
   onEditTransaction: PropTypes.func,
+  onHandleViewFilterSwitch: PropTypes.func,
 };

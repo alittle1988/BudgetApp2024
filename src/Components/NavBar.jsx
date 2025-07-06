@@ -17,6 +17,9 @@ function NavBar() {
             <Link to="/viewTransaction">View Transactions</Link>
           </Nav.Item>
           <Nav.Item>
+            <Link to="/YearSummary">Year Summary</Link>
+          </Nav.Item>
+          <Nav.Item>
             <Link to="/EditUser">Edit User</Link>
           </Nav.Item>
         </Nav>

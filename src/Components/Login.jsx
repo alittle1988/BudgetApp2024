@@ -10,7 +10,7 @@ function Login(props) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [loginSwitch, setLoginSwitch] = useState(false);
-  const { get, results} = useFetch("http://localhost:8080");
+  const { get, results} = useFetch("http://localhost:5001");
   const { onHandleLogin, onSetTheUser } = props;
   const inputRef = useRef();
 
@@ -95,7 +95,7 @@ function Login(props) {
                 </Button>
               </Form>
             </Col>
-            <Col className="" lg={6}>
+            <Col className="mt-5" lg={6}>
               <Button onClick={handleLoginSwitch} className="w-50 m-auto">
                 New User
               </Button>

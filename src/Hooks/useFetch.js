@@ -32,7 +32,7 @@ function useFetch(baseUrl) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      
     }
   }
 
@@ -67,7 +67,7 @@ function useFetch(baseUrl) {
       });
       const data = await response;
       setLoading(false);
-      console.log("here");
+      
     } catch (error) {
       console.log(error.message);
       setLoading(false);

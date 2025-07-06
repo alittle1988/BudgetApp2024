@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import useFetch from "../Hooks/useFetch";
 
 function NewUserForm(props) {
-  const {  onSetTheUser, onLoginSwitch } = props;
+  const { onSetTheUser, onLoginSwitch } = props;
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,11 +14,11 @@ function NewUserForm(props) {
   const [validation, setValidation] = useState(false);
   const [validateUserName, setValidateUserName] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
-  const {post, results} = useFetch("http://localhost:8080");
+  const { post, results } = useFetch("http://localhost:5001");
 
   function formSubmit2(e) {
     e.preventDefault();
-    
+
     const body = {
       firstName: firstName,
       lastName: lastName,
@@ -30,7 +30,7 @@ function NewUserForm(props) {
       expTransactions: [],
       incCategories: [],
       expCategories: [],
-    }
+    };
     if (
       firstName === "" ||
       lastName === "" ||
@@ -41,25 +41,38 @@ function NewUserForm(props) {
       setValidation(true);
       return;
     }
+
     post("/users", body);
-    alert(`${body.userName} has been created!`);
-    onLoginSwitch()
   }
 
-function handleEmailChange(e) {
-  setValidateEmail(false)
-  setEmail(e)
-  setDisabled(false)
-}
+  function handleEmailChange(e) {
+    setValidateEmail(false);
+    setEmail(e);
+    setDisabled(false);
+  }
 
-function handleUserNameChange(e) {
-  setValidateUserName(false)
-  setUserName(e)
-  setDisabled(false)
-}
- 
+  function handleUserNameChange(e) {
+    setValidateUserName(false);
+    setUserName(e);
+    setDisabled(false);
+  }
 
-  
+  useEffect(() => {
+    if (results) {
+      if (results.success === false) {
+        if (results.message === "Email already exist!") {
+          alert(results.message);
+          setEmail("");
+        } else if (results.message === "Username already exist!") {
+          alert(results.message);
+          setUserName("");
+        }
+      } else {
+        alert(`${userName} has been Created`);
+        onLoginSwitch();
+      }
+    }
+  }, [results]);
 
   return (
     <Container>
@@ -67,6 +80,7 @@ function handleUserNameChange(e) {
         <Col>
           <div>
             <h5 className="mt-3">Create new user</h5>
+
             {validation ? (
               <p className="text-danger">Please fill all required input!</p>
             ) : (
@@ -164,5 +178,5 @@ export default NewUserForm;
 
 NewUserForm.propTypes = {
   onSetTheUser: PropTypes.func,
-  onLoginSwitch: PropTypes.func
-}
+  onLoginSwitch: PropTypes.func,
+};

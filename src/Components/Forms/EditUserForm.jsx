@@ -8,17 +8,19 @@ export default function EditUserForm(props) {
   const [newUserName, setNewUserName] = useState(theUser.userName);
   const [newFirstName, setNewFirstName] = useState(theUser.firstName);
   const [newLastName, setNewLastName] = useState(theUser.lastName);
-  const { remove, results, loading } = useFetch("http://localhost:8080");
+  const [newEmail, setNewEmail] = useState(theUser.email)
+  const { remove, results, loading } = useFetch("http://localhost:5001");
 
   function handleEditSubmit(e) {
     e.preventDefault();
 
     // figure out how to immutably change the strings
-    let {firstName, lastName, userName} = theUser;
+    let {firstName, lastName, userName, email} = theUser;
     firstName = newFirstName;
     lastName = newLastName;
     userName = newUserName;
-    let updatedUser = {...theUser, firstName, lastName, userName}
+    email = newEmail
+    let updatedUser = {...theUser, firstName, lastName, userName, email}
     
     onHandleSetUser(updatedUser);
     console.log("User has been updated!");
@@ -74,7 +76,16 @@ export default function EditUserForm(props) {
             value={newLastName}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" className="mt-2">
+        <Form.Group>
+          <Form.Label className="font-weight-bold" htmlFor="email">Email:</Form.Label>
+          <Form.Control
+            className="w-25"
+            id="email"
+            onChange={(e) => setNewEmail(e.target.value)}
+            value={newEmail}
+            ></Form.Control>
+        </Form.Group>
+        <Button type="submit" className="mt-4">
           Submit
         </Button>
       </Form>
@@ -82,7 +93,7 @@ export default function EditUserForm(props) {
         className="mt-5 btn btn-danger"
         onClick={() => handleDeleteUser(theUser)}
       >
-        Delete!
+        Delete User!
       </Button>
     </>
   );

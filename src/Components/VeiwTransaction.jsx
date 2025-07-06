@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Form, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import TransactionTable from "./Tables/TransactionTable";
+import { filterTransactionList } from "../Functions/functions";
 
 function VeiwTransaction(props) {
   const {
@@ -14,12 +15,15 @@ function VeiwTransaction(props) {
     months,
     onHandleMonthChange,
   } = props;
-  const [category, setCategory] = useState("Expense");
+  const [category, setCategory] = useState("All");
   const [catList, setCatList] = useState(["All", "Expense", "Income"]);
+  const [viewFilters, setViewFilters] = useState(true);
 
   const [viewEdit, setViewEdit] = useState(false);
 
-  const [transactionList, setTransactionsList] = useState(filterTrans(month));
+  const [transactionList, setTransactionsList] = useState(
+    filterTransactionList(month, year, months, category, theUser)[0]
+  );
   const [theUserTransCatList, setTheUserTransCatList] = useState(
     theUser.expCategories
   );
@@ -31,89 +35,8 @@ function VeiwTransaction(props) {
     newYears.push(i);
   }
 
-  function filterTrans(from) {
-    let begin;
-    let end;
-    switch (from) {
-      case "Januaray":
-        begin = `${year}` + "-" + "01";
-        end = `${year}` + "-" + "02";
-        break;
-      case "Feburary":
-        begin = `${year}` + "-" + "02";
-        end = `${year}` + "-" + "03";
-        break;
-      case "March":
-        begin = `${year}` + "-" + "03";
-        end = `${year}` + "-" + "04";
-        break;
-      case "April":
-        begin = `${year}` + "-" + "04";
-        end = `${year}` + "-" + "05";
-        break;
-      case "May":
-        begin = `${year}` + "-" + "05";
-        end = `${year}` + "-" + "06";
-        break;
-      case "June":
-        begin = `${year}` + "-" + "06";
-        end = `${year}` + "-" + "07";
-        break;
-      case "July":
-        begin = `${year}` + "-" + "07";
-        end = `${year}` + "-" + "08";
-        break;
-      case "August":
-        begin = `${year}` + "-" + "08";
-        end = `${year}` + "-" + "09";
-        break;
-      case "September":
-        begin = `${year}` + "-" + "09";
-        end = `${year}` + "-" + "10";
-        break;
-      case "October":
-        begin = `${year}` + "-" + "10";
-        end = `${year}` + "-" + "11";
-        break;
-      case "November":
-        begin = `${year}` + "-" + "11";
-        end = `${year}` + "-" + "12";
-        break;
-      case "December":
-        begin = `${year}` + "-" + "12";
-        end = `${year}` + "-" + "01-31";
-        break;
-      default:
-        console.log("no date selected");
-    }
-
-    if (category === "Expense") {
-      const filteredArray = theUser.expTransactions.filter((item) => {
-        if (item.date >= begin && item.date <= end) {
-          return item;
-        }
-      });
-
-      return filteredArray;
-    } else if (category === "Income") {
-      const filteredArray = theUser.incTransactions.filter((item) => {
-        if (item.date >= begin && item.date <= end) {
-          return item;
-        }
-      });
-
-      return filteredArray;
-    } else if (category === "All") {
-      let newArray = theUser.incTransactions.concat(theUser.expTransactions);
-
-      const filteredArray = newArray.filter((item) => {
-        if (item.date >= begin && item.date <= end) {
-          return item;
-        }
-      });
-
-      return filteredArray;
-    }
+  function handleViewFilterSwitch() {
+    setViewFilters(!viewFilters);
   }
 
   function handleViewEditOff() {
@@ -143,8 +66,10 @@ function VeiwTransaction(props) {
   }
 
   useEffect(() => {
-    setTransactionsList(filterTrans(month));
-  }, [category, month, year, deleteClick]);
+    setTransactionsList(
+      filterTransactionList(month, year, months, category, theUser)[0]
+    );
+  }, [category, month, year, deleteClick, theUser, months]);
 
   return (
     <Container>
@@ -153,51 +78,55 @@ function VeiwTransaction(props) {
           <h3 className="text-secondary text-center mb-5">All Transactions</h3>
         </Col>
       </Row>
-      <Row >
-        <Col lg={4}>
-          <Form>
-            <Form.Group>
+      {viewFilters ? (
+        <Row>
+          <Col lg={4}>
+            <Form>
+              <Form.Group>
+                <Form.Select
+                  onChange={(e) => onHandleYearChange(e.target.value)}
+                  value={year}
+                  className="w-50"
+                >
+                  {newYears.map((yearNum) => {
+                    return <option key={yearNum}>{yearNum}</option>;
+                  })}
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col lg={4}>
+            <Form>
+              <Form.Group>
+                <Form.Select
+                  onChange={(e) => onHandleMonthChange(e.target.value)}
+                  value={month}
+                  className="w-50"
+                >
+                  {months.map((month) => {
+                    return <option key={month}>{month}</option>;
+                  })}
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col col={4}>
+            <Form>
               <Form.Select
-                onChange={(e) => onHandleYearChange(e.target.value)}
-                value={year}
                 className="w-50"
+                onChange={(e) => handleCatChange(e.target.value)}
+                value={category}
               >
-                {newYears.map((yearNum) => {
-                  return <option key={yearNum}>{yearNum}</option>;
+                {catList.map((cat) => {
+                  return <option key={cat}>{cat}</option>;
                 })}
               </Form.Select>
-            </Form.Group>
-          </Form>
-        </Col>
-        <Col lg={4}>
-          <Form>
-            <Form.Group>
-              <Form.Select
-                onChange={(e) => onHandleMonthChange(e.target.value)}
-                value={month}
-                className="w-50"
-              >
-                {months.map((month) => {
-                  return <option key={month}>{month}</option>;
-                })}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </Col>
-        <Col col={4}>
-          <Form>
-            <Form.Select
-              className="w-50"
-              onChange={(e) => handleCatChange(e.target.value)}
-              value={category}
-            >
-              {catList.map((cat) => {
-                return <option key={cat}>{cat}</option>;
-              })}
-            </Form.Select>
-          </Form>
-        </Col>
-      </Row>
+            </Form>
+          </Col>
+        </Row>
+      ) : (
+        <div></div>
+      )}
 
       <Row className="mt-5">
         <TransactionTable
@@ -211,6 +140,7 @@ function VeiwTransaction(props) {
           onEditTransaction={onEditTransaction}
           onDeleteClick={onDeleteClick}
           onRemoveTrans={handleRemoveTrans}
+          onHandleViewFilterSwitch={handleViewFilterSwitch}
         />
       </Row>
     </Container>
