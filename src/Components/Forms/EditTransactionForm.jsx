@@ -139,3 +139,5 @@ EditTransactionForm.propTypes = {
   onEditTransaction: PropTypes.func,
   onHandleViewFilterSwitch: PropTypes.func,
 };
+
+// moving handleEdit Transaction function to EditTransaction from to clear up app.jsx

@@ -9,7 +9,9 @@ function AddTransaction(props) {
     incomeCategories,
     onAddCategory,
     expenseCategories,
-    onAddTransaction,
+    
+    setTheUser,
+    theUser
   } = props;
   const [incExp, setIncExp] = useState("Income");
   const [newCategory, setNewCategory] = useState("");
@@ -75,14 +77,18 @@ function AddTransaction(props) {
 
           {incExp === "Income" ? (
             <TransactionForm
+              setTheUser={setTheUser}
+              theUser={theUser}
               incExp={incExp}
-              onAddTransaction={onAddTransaction}
+              
               categories={incomeCategories}
             />
           ) : (
             <TransactionForm
+              setTheUser={setTheUser}
+              theUser={theUser}
               incExp={incExp}
-              onAddTransaction={onAddTransaction}
+              
               categories={expenseCategories}
             />
           )}

@@ -7,7 +7,7 @@ function Home(props) {
   const {
     loggedIn,
     onAddCategory,
-    onAddTransaction,
+    
     onHandleLogin,
     onSetTheUser,
     incomeCategories,
@@ -22,16 +22,18 @@ function Home(props) {
     onHandleMonthChange,
     onHandleSetUser,
     onHandleLogout,
+    setTheUser
   } = props;
 
   return (
     <Container className="mt-5">
       {loggedIn ? (
         <UserHome
+          setTheUser={setTheUser}
           incomeCategories={incomeCategories}
           expenseCategories={expenseCategories}
           onAddCategory={onAddCategory}
-          onAddTransaction={onAddTransaction}
+          
           theUser={theUser}
           onEditTransaction={onEditTransaction}
           onDeleteClick={onDeleteClick}

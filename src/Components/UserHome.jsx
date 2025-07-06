@@ -11,7 +11,7 @@ import YearSummary from "./YearSummary";
 function UserHome(props) {
   const {
     onAddCategory,
-    onAddTransaction,
+    
     incomeCategories,
     expenseCategories,
     theUser,
@@ -24,6 +24,7 @@ function UserHome(props) {
     onHandleMonthChange,
     onHandleSetUser,
     onHandleLogout,
+    setTheUser
   } = props;
 
   return (
@@ -48,8 +49,10 @@ function UserHome(props) {
           path="/addTransaction"
           element={
             <AddTransaction
+              setTheUser={setTheUser}
+              theUser={theUser}
               onAddCategory={onAddCategory}
-              onAddTransaction={onAddTransaction}
+              
               incomeCategories={incomeCategories}
               expenseCategories={expenseCategories}
             />

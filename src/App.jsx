@@ -97,6 +97,7 @@ function App() {
     if (incExp === "Income") {
       const { incTransactions, ...rest } = theUser;
       let index = getIndexById(data.id, incTransactions);
+      console.log(index);
       incTransactions.splice(index, 1);
       let newData = { ...theUser, incTransactions };
       setTheUser(newData);
@@ -132,22 +133,6 @@ function App() {
       api.put(`/users/${theUser._id}`, newData);
     }
   }
-  // handles adding transaction the the user transaction list
-  function handleAddTransaction(data, incExp) {
-    if (incExp === "Income") {
-      const { incTransactions, ...rest } = theUser;
-      incTransactions.push(data);
-      let newData = { ...theUser, incTransactions };
-      setTheUser(newData);
-    } else if (incExp === "Expense") {
-      const { expTransactions, ...rest } = theUser;
-      expTransactions.push(data);
-      let newData = { ...theUser, expTransactions };
-      setTheUser(newData);
-    }
-    //put(`/users/${theUser._id}`, theUser);
-    api.put(`/users/${theUser._id}`, theUser);
-  }
 
   return (
     <>
@@ -159,7 +144,7 @@ function App() {
             path="*"
             element={
               <Home
-                onAddTransaction={handleAddTransaction}
+                setTheUser={setTheUser}
                 incomeCategories={incomeCategories}
                 expenseCategories={expenseCategories}
                 loggedIn={loggedIn}

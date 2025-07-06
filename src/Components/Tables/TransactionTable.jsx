@@ -47,6 +47,7 @@ function TransactionTable(props) {
 
   function handleDeleteBtnClick(e) {
     if (confirm("Are you sure you want to delete transaction?")) {
+      console.log(e)
       onDeleteClick(e, category);
       onRemoveTrans();
     }

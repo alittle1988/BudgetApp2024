@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import PropTypes from 'prop-types';
+import PropTypes, { object } from "prop-types";
 import toast from "react-hot-toast";
+import api from "../../../lib/axios";
 
 function TransactionForm(props) {
-  const { categories, incExp, onAddTransaction } = props;
+  const { categories, incExp, setTheUser, theUser } = props;
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
@@ -16,8 +17,6 @@ function TransactionForm(props) {
   const [hours, setHours] = useState();
   const [ptoHours, setPtoHours] = useState();
 
-
-  console.log(amount)
   function handleSubmitClick(e) {
     e.preventDefault();
     if (amount === 0) {
@@ -36,10 +35,10 @@ function TransactionForm(props) {
       return;
     }
 
-    if(category === "Gas") {
-      if(typeof description !== 'number') {
-        toast.error('Enter gallons in description input!')
-        return
+    if (category === "Gas") {
+      if (typeof description !== "number") {
+        toast.error("Enter gallons in description input!");
+        return;
       }
     }
 
@@ -52,7 +51,20 @@ function TransactionForm(props) {
       ptoHours: Number(ptoHours),
       id: Date.now(),
     };
-    onAddTransaction(newTrans, incExp);
+    if (incExp === "Income") {
+      const { incTransactions, ...rest } = theUser;
+      incTransactions.push(newTrans);
+      let newData = { ...theUser, incTransactions };
+      setTheUser(newData);
+    } else if (incExp === "Expense") {
+      const { expTransactions, ...rest } = theUser;
+      expTransactions.push(newTrans);
+      let newData = { ...theUser, expTransactions };
+      setTheUser(newData);
+    }
+
+    api.put(`/users/${theUser._id}`, theUser);
+
     setCategory("");
     setDescription("");
     setAmount(0);
@@ -142,21 +154,25 @@ function TransactionForm(props) {
         )}
         <Form.Group>
           <Form.Label htmlFor="description">Description:</Form.Label>
-          {category === 'gas' ? <Form.Control
-            type="number"
-            id="description"
-            className="w-50"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-          ></Form.Control> : <Form.Control
-            type="text"
-            id="description"
-            className="w-50"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-          ></Form.Control> }
+          {category === "gas" ? (
+            <Form.Control
+              type="number"
+              id="description"
+              className="w-50"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+            ></Form.Control>
+          ) : (
+            <Form.Control
+              type="text"
+              id="description"
+              className="w-50"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+            ></Form.Control>
+          )}
         </Form.Group>
 
         {category === "Tips" ? (
@@ -216,7 +232,9 @@ function TransactionForm(props) {
 export default TransactionForm;
 
 TransactionForm.propTypes = {
-  categories: PropTypes.array, 
+  categories: PropTypes.array,
   incExp: PropTypes.string,
-  onAddTransaction: PropTypes.func
-}
+  onAddTransaction: PropTypes.func,
+  setTheUser: PropTypes.func,
+  theUser: object,
+};
